@@ -1,26 +1,30 @@
 pipeline{
     agent any
     parameters{
-        string(name: 'branch', defaultValue: '', description: '')
-        string(name: 'buildno', defaultValue: '', description: '')
+        string(name: 'BRANCH', defaultValue: '', description: '')
     }
     stages{
         stage("clone a code"){
             steps{
-                git branch: "${branch}",
-                url: 'https://github.com/alankruthi420/boxfuse-sample-java-war-hello.git'
+                println "clone a code"
+                git branch: "${BRANCH}",
+                url: 'https://github.com/KuruvaSomaSekhar/boxfuse-sample-java-war-hello.git'
             }
+        }
 
-        }
-        stage("build"){
+
+ stage("build"){
             steps{
+                println "building the code"
                 sh "mvn clean package"
+                sh "ls -l"
             }
         }
-        stage("upload to s3"){
+        stage("uploading the artifacts"){
             steps{
-                sh "aws s3 cp target/hello-${buildno}.war s3://alankruthiart/application/${buildno}/"
+                println "uploading artifacts to s3"
+                sh "aws s3 cp target/hello-*.war s3://alankruthiart/${BRANCH}/"
             }
         }
-    }
-}
+            }
+            }
